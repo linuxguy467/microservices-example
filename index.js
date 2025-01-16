@@ -1,10 +1,12 @@
 import UserService from './services/user.service.js';
 import EmailService from './services/email.service.js';
+import AuthService from './services/auth.service.js';
 
 async function startApp() {
   // Start services
   await UserService.start();
   await EmailService.start();
+  await AuthService.start();
 
   try {
     // Simulate user creation
@@ -22,12 +24,21 @@ async function startApp() {
       content: 'Thank you for signing up!'
     });
     console.log(emailResult);
+
+    // Simulate auth
+    const authResult = await AuthService.call('auth.authUser', {
+      username: 'admin',
+      password: 'password'
+    })
+    console.log('Auth result:', authResult);
+
   } catch (error) {
     console.error('Error:', error);
   } finally {
     // Stop services
     await UserService.stop();
     await EmailService.stop();
+    await AuthService.stop();
   }
 }
 
